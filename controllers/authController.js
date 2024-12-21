@@ -1,5 +1,7 @@
 import userModel from "../models/user.model.js";
 import { hashPassword } from "../utils/authUtil.js";
+import JWT from "jsonwebtoken"
+import { comparePassword } from "../utils/authUtil.js"
 
 const registerController = async (req, res) => {
     try {
@@ -49,4 +51,47 @@ const registerController = async (req, res) => {
     }
 };
 
-export { registerController };
+const loginController = async (req, res) => {
+    try {
+
+        const { email, password } = req.body
+
+        //validation
+        if (!email || !password) {
+            return res.status(400).json({ message: "All Fields Are Required" })
+        }
+        // Check if user exists
+        const user = await userModel.findOne({ email: email })
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User Doesnt Exists" })
+        }
+        const match = await comparePassword(password, user.password)
+        if (!match) {
+            return res.status(200).json({ success: false, message: "Invalid Password" })
+        }
+
+        const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" })
+
+
+        res.status(200).json({
+            success: true, message: "User Logged In Successfully", user: {
+                name: user.name,
+                email: user.email
+            }, token: token  //Remove Token While Deploying
+        })
+
+    } catch (err) {
+        console.log(`Error while Logging in ${err}`)
+        return res.status(500).json({ success: false, message: "Error While Logging The User" })
+    }
+}
+
+//testController
+
+const testController = (req, res) => {
+    res.send("protected Route")
+}
+
+
+
+export { registerController, loginController, testController };
