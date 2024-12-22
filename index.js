@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import connectDB from "./config/db.js";
 import authroutes from "./routes/authRoute.js"
 import cors from "cors"
+import categoryRoute from "./routes/categoryRoute.js"
 
 dotenv.config();
 //database config
@@ -18,6 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 
 //routes
 app.use('/api/v1/auth', authroutes)
+app.use('/api/v1/category', categoryRoute)
+
 
 app.get('/', (req, res) => {
     res.send("Hello World")
