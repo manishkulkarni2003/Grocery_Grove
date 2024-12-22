@@ -77,7 +77,8 @@ const loginController = async (req, res) => {
         res.status(200).json({
             success: true, message: "User Logged In Successfully", user: {
                 name: user.name,
-                email: user.email
+                email: user.email,
+                role: user.role
             }, token: token  //Remove Token While Deploying
         })
 
