@@ -39,9 +39,9 @@ const Login = () => {
   return (
     <Layout title="Login-GroceryGrove" >
           <div className="form-container">
-            <h1>Login</h1>
+            
             <form onSubmit={handleLogin}>
-      
+            <h1 className='text-center'>Login</h1>
     
       <div className="mb-3">
         
@@ -65,7 +65,13 @@ const Login = () => {
         className="form-control" id="exampleInputPassword1"placeholder='Enter a Password'
         required />
       </div>
-    
+
+      <div className="mb-3">
+      <button type="submit" className="btn btn-primary" onClick={()=>{
+        navigate('/forgot-password')
+      }}>Forgot Password</button>
+      </div>
+
 <button type="submit" className="btn btn-primary">Login</button>
     </form>
     

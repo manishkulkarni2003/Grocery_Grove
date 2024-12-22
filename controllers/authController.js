@@ -5,10 +5,10 @@ import { comparePassword } from "../utils/authUtil.js"
 
 const registerController = async (req, res) => {
     try {
-        const { name, email, password, phone, address } = req.body;
+        const { name, email, password, phone, address, answer } = req.body;
 
         // Validations
-        if (!name || !email || !password || !phone || !address) {
+        if (!name || !email || !password || !phone || !address || !answer) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
@@ -34,6 +34,7 @@ const registerController = async (req, res) => {
             phone,
             address,
             password: hashedPassword,
+            answer
         }).save();
 
         // Success response
@@ -86,6 +87,43 @@ const loginController = async (req, res) => {
     }
 }
 
+//forgot password
+const forgotPasswordController = async (req, res) => {
+    try {
+
+        const { email, answer, newPassword } = req.body;
+        if (!email || !answer || !newPassword) {
+            res.status(400).json({
+
+                message: "Email or answer or newPassword  is Required"
+            })
+        }
+        //check 
+        const user = await userModel.findOne({ email: email, answer: answer })
+        if (!user) {
+            return res.status(404).json({ success: false, message: "Wrong email or answer" })
+        }
+        const hashed = await hashPassword(newPassword)
+        await userModel.findByIdAndUpdate(user._id, { password: hashed })
+        res.status(200).json({
+            success: true,
+            message: "Password Reset Successfully"
+        })
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            success: false,
+            message: "Something Went Wrong",
+            err
+        })
+    }
+
+}
+
+
+
+
 //testController
 
 const testController = (req, res) => {
@@ -94,4 +132,4 @@ const testController = (req, res) => {
 
 
 
-export { registerController, loginController, testController };
+export { registerController, loginController, testController, forgotPasswordController };
