@@ -173,7 +173,68 @@ const updateProductController = async (req, res) => {
     }
 };
 
+const productFilterController = async (req, res) => {
+    try {
+
+        const { checked, radio } = req.body
+        let args = {
+
+        }
+        if (checked.length > 0) args.category = checked
+
+        if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] }
+
+        const products = await productModel.find(args)
+        res.status(200).json({
+            success: true,
+            products
+        })
 
 
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            success: false, err,
+            message: "Error While Filtering the Product"
+        })
+    }
+}
 
-export { createProductController, getProductController, getSingleProductController, deleteProductController, updateProductController };
+const productCountController = async (req, res) => {
+    try {
+        //pagination
+
+        const total = await productModel.find({}).estimatedDocumentCount()
+
+        res.status(200).json({ success: true, total })
+
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ success: false, err, message: "Something Went Wrong" })
+    }
+}
+
+
+//pagination
+const productListController = async (req, res) => {
+    try {
+
+        const perPage = 6;
+
+        const page = req.params.page ? req.params.page : 1;
+
+        const products = await productModel.find({}).skip((page - 1) * perPage)
+            .limit(perPage)
+            .sort({ createdAt: -1 })
+
+
+        res.status(200).json({ success: true, products })
+
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ success: false, err, message: "Something went wrong" })
+    }
+}
+
+export { createProductController, getProductController, getSingleProductController, deleteProductController, updateProductController, productFilterController, productCountController, productListController };
