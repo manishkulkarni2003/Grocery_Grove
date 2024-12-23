@@ -19,6 +19,8 @@ import Orders from './pages/user/Orders';
 import Profile from './pages/user/Profile';
 import Products from './pages/Admin/Products';
 import Updateproduct from './pages/Admin/Updateproduct';
+import Searchpage from './pages/Searchpage';
+import Productdetails from './pages/Productdetails';
 
 
 
@@ -29,6 +31,8 @@ function App() {
     <>
     <Routes>
       <Route path="/" element={<HomePage/>}/>
+      <Route path="/product/:slug" element={<Productdetails/>}/>
+      <Route path="/search" element={<Searchpage/>}/>
       
       <Route path='/dashboard'  element={<PrivateRoute/>}>
       <Route path="user" element={<Dashboard/>}/>

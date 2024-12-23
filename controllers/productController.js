@@ -237,4 +237,47 @@ const productListController = async (req, res) => {
     }
 }
 
-export { createProductController, getProductController, getSingleProductController, deleteProductController, updateProductController, productFilterController, productCountController, productListController };
+const searchProductController = async (req, res) => {
+    try {
+
+        const { keyword } = req.params;
+        const result = await productModel.find({
+            $or: [
+                { name: { $regex: keyword, $options: "i" } },
+
+                { description: { $regex: keyword, $options: "i" } }
+            ]
+        })
+        res.json(result)
+
+
+
+
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            success: false, err,
+            message: "Error In Search Product Api"
+        })
+    }
+}
+//similar product
+const relatedProductController = async (req, res) => {
+    try {
+
+        const { pid, cid } = req.params;
+        const product = await productModel.find({
+            category: cid,
+            _id: { $ne: pid }
+        }).limit(3).populate("category");
+        res.status(200).json({ success: true, message: "SuccessFully Fetched the Similar Products", product })
+
+
+    } catch (err) {
+        console.log(err)
+        res.status(400).json({ success: false, err, message: "Error While Fetching Similar Product" })
+    }
+}
+
+
+export { createProductController, getProductController, getSingleProductController, deleteProductController, updateProductController, productFilterController, productCountController, productListController, searchProductController, relatedProductController };

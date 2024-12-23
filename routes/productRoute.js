@@ -1,6 +1,6 @@
 import express from "express"
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js"
-import { createProductController, getProductController, getSingleProductController, deleteProductController, updateProductController, productFilterController, productCountController, productListController } from "../controllers/productController.js"
+import { createProductController, getProductController, getSingleProductController, deleteProductController, updateProductController, productFilterController, productCountController, productListController, searchProductController, relatedProductController } from "../controllers/productController.js"
 import { upload } from "../middlewares/multerMiddleware.js"
 
 
@@ -35,5 +35,14 @@ router.get("/product-count", productCountController)
 
 //product per page
 router.get('/product-list/:page', productListController)
+
+//serach Product
+router.get("/search/:keyword", searchProductController)
+
+//similar product
+
+router.get('/related-product/:pid/:cid', relatedProductController)
+
+
 
 export default router
