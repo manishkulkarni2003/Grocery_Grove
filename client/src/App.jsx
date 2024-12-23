@@ -21,6 +21,8 @@ import Products from './pages/Admin/Products';
 import Updateproduct from './pages/Admin/Updateproduct';
 import Searchpage from './pages/Searchpage';
 import Productdetails from './pages/Productdetails';
+import Categories from './pages/Categories';
+import Categoryproduct from './pages/Categoryproduct';
 
 
 
@@ -32,6 +34,8 @@ function App() {
     <Routes>
       <Route path="/" element={<HomePage/>}/>
       <Route path="/product/:slug" element={<Productdetails/>}/>
+      <Route path="/categories" element={<Categories/>}/>
+      <Route path="/category/:slug" element={<Categoryproduct/>}/>
       <Route path="/search" element={<Searchpage/>}/>
       
       <Route path='/dashboard'  element={<PrivateRoute/>}>

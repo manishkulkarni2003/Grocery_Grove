@@ -4,11 +4,18 @@ import { MdShoppingCart } from "react-icons/md";
 import { useAuth } from '../../context/auth';
 import toast from 'react-hot-toast';
 import Searchinput from '../Form/Searchinput';
+import useCategory from '../../hooks/useCategory';
+
 
 
 
 const Header = () => {
-  const [auth,setAuth] =useAuth()
+  const [auth,setAuth] =useAuth();
+
+  const categories=useCategory();
+
+
+
 
  const handleLogout=()=>{
   setAuth({...auth,user:null,token:""})
@@ -30,9 +37,44 @@ const Header = () => {
         <li className="nav-item">
           <NavLink to="/" className="nav-link"  >Home</NavLink>
         </li>
-        <li className="nav-item">
-          <NavLink to="/category" className="nav-link"  >Category</NavLink>
-        </li>
+        
+        <li className="nav-item dropdown">
+  <Link to={"/categories"}   className="nav-link dropdown-toggle"  data-bs-toggle="dropdown" >
+    Categories
+  </Link>
+  <ul className="dropdown-menu">
+    <li>
+      <Link className='dropdown-item' to={'/categories'}>
+      All Categories
+      </Link>
+    </li>
+    {categories?.map((c)=>(
+    <li>
+      <Link to={`/category/${c.slug}`} className="dropdown-item" >
+      {c.name}</Link>
+      </li>
+    
+    
+    ))}
+
+  </ul>
+  
+
+  
+    <ul className="dropdown-menu">
+    {categories?.map((c)=>(
+    <li>
+      <Link to={`/category/${c.slug}`} className="dropdown-item" >
+      {c.name}</Link>
+      </li>
+    
+    
+    ))}
+  </ul>
+  
+  
+</li>
+
         {
           !auth.user?(<>
           <li className="nav-item">

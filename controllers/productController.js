@@ -1,4 +1,5 @@
 import productModel from "../models/product.model.js";
+import categoryModel from "../models/category.model.js"
 
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import slugify from "slugify";
@@ -279,5 +280,23 @@ const relatedProductController = async (req, res) => {
     }
 }
 
+const productCategoryController = async (req, res) => {
+    try {
 
-export { createProductController, getProductController, getSingleProductController, deleteProductController, updateProductController, productFilterController, productCountController, productListController, searchProductController, relatedProductController };
+        const category = await categoryModel.findOne({ slug: req.params.slug })
+        const products = await productModel.find({ category }).populate('category')
+
+        res.status(200).json({ success: true, category, products })
+
+
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            success: false, err,
+            message: "Error While Getting the Category"
+        })
+    }
+}
+
+
+export { createProductController, getProductController, getSingleProductController, deleteProductController, updateProductController, productFilterController, productCountController, productListController, searchProductController, relatedProductController, productCategoryController };
