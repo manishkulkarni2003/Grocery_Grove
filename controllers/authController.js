@@ -78,6 +78,8 @@ const loginController = async (req, res) => {
             success: true, message: "User Logged In Successfully", user: {
                 name: user.name,
                 email: user.email,
+                address: user.address,
+                phone: user.phone,
                 role: user.role
             }, token: token  //Remove Token While Deploying
         })
@@ -131,6 +133,52 @@ const testController = (req, res) => {
     res.send("protected Route")
 }
 
+//update Profile
+
+const updateProfileController = async (req, res) => {
+
+    try {
+
+        const { name, email, password, address, phone } = req.body;
+
+        const user = await userModel.findById(req.user._id);
+
+        //password
+        if (password && password.length < 6) {
+            return res.json({ error: "Password is Required and  Character Long" })
+        }
+
+        const hashedPassword = password ? await hashPassword(password) : undefined;
+
+        const updatedUser = await userModel.findByIdAndUpdate(req.user._id, {
+            name: name || user.name,
+
+            password: hashedPassword || user.password,
+
+            phone: phone || user.phone,
+
+            address: address || user.address,
 
 
-export { registerController, loginController, testController, forgotPasswordController };
+        }, { new: true })
+
+        res.status(200).json({
+            success: true, updatedUser,
+            message: "Profile Updated Successfully"
+        })
+
+
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            success: false, err,
+            message: "SomethingWent Wrong While Update Profile"
+        })
+    }
+}
+
+
+
+
+
+export { registerController, loginController, testController, forgotPasswordController, updateProfileController };
