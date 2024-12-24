@@ -46,46 +46,46 @@ const Orders = () => {
                 <table className='table'>
                 <thead>
                   <tr>
-                    <td scope='col'>
+                    <th scope='col'>
                     #
-                    </td>
-                    <td scope='col'>
+                    </th>
+                    <th scope='col'>
                   Status
-                    </td>
-                    <td scope='col'>
+                    </th>
+                    <th scope='col'>
                   Product
-                    </td>
-                    <td scope='col'>
+                    </th>
+                    <th scope='col'>
                   Date
-                    </td>
-                    <td scope='col'>
+                    </th>
+                    <th scope='col'>
                   Payment
-                    </td>
-                    <td scope='col'>
+                    </th>
+                    <th scope='col'>
                   Quantity
-                    </td>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
               <tr>
-                <th>
+                <td>
                   {i+1}
-                </th>
-                <th>
+                </td>
+                <td>
                   {o?.status}
-                </th>
-                <th>
+                </td>
+                <td>
                   {o?.products?.map(p=>p.name)}
-                </th>
-                <th>
+                </td>
+                <td>
                   {moment(o?.createdAt).fromNow()}
-                </th>
-                <th>
+                </td>
+                <td>
                   {o?.payment.success?"Success":"Failed"}
-                </th>
-                <th>
+                </td>
+                <td>
                   {o?.products?.length}
-                </th>
+                </td>
               </tr>
                 </tbody>
                 </table>

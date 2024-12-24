@@ -199,8 +199,45 @@ const getOrdersController = async (req, res) => {
     }
 }
 
+//all orders
+const getAllOrdersController = async (req, res) => {
+    try {
+
+        const orders = await orderModel.find({}).populate("products").populate("buyer", "name").sort({ createdAt: -1 });
+        res.json(orders);
+
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            success: false, err,
+            message: "Error While Fetching All Orders"
+        })
+    }
+}
+
+//order status
+
+const orderStatusController = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const { status } = req.body;
+
+        const orders = await orderModel.findByIdAndUpdate(orderId, { status }, { new: true })
+        res.json(orders)
+
+
+
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            success: false, err,
+            message: "Error While Updating Order Status"
+        })
+    }
+}
 
 
 
 
-export { registerController, loginController, testController, forgotPasswordController, updateProfileController, getOrdersController };
+
+export { registerController, loginController, testController, forgotPasswordController, updateProfileController, getOrdersController, getAllOrdersController, orderStatusController };

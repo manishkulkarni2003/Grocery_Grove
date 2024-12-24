@@ -24,6 +24,7 @@ import Productdetails from './pages/Productdetails';
 import Categories from './pages/Categories';
 import Categoryproduct from './pages/Categoryproduct';
 import Cartpage from './pages/Cartpage';
+import Adminorders from './pages/Admin/Adminorders';
 
 
 
@@ -56,6 +57,7 @@ function App() {
       <Route path="admin/product/:slug" element={<Updateproduct/>}/>
       <Route path="admin/products" element={<Products/>}/>
       <Route path="admin/users" element={<Users/>}/>
+      <Route path="admin/orders" element={<Adminorders/>}/>
       </Route>
 
       
