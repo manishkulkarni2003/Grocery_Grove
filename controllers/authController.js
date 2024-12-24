@@ -1,4 +1,5 @@
 import userModel from "../models/user.model.js";
+import orderModel from "../models/order.model.js"
 import { hashPassword } from "../utils/authUtil.js";
 import JWT from "jsonwebtoken"
 import { comparePassword } from "../utils/authUtil.js"
@@ -177,8 +178,29 @@ const updateProfileController = async (req, res) => {
     }
 }
 
+//orders
+
+const getOrdersController = async (req, res) => {
+    try {
+
+        const orders = await orderModel.find({ buyer: req.user._id }).populate('products').populate("buyer", "name");
+        res.json(orders);
 
 
 
 
-export { registerController, loginController, testController, forgotPasswordController, updateProfileController };
+
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            success: false, err,
+            message: "Erro While Fetching the Orders"
+        })
+    }
+}
+
+
+
+
+
+export { registerController, loginController, testController, forgotPasswordController, updateProfileController, getOrdersController };
