@@ -2,7 +2,7 @@ import express from "express"
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js"
 import {
     createProductController, getProductController, getSingleProductController, deleteProductController, updateProductController, productFilterController, productCountController, productListController, searchProductController, relatedProductController,
-    productCategoryController
+    productCategoryController, braintreeTokenController, braintreePaymentController
 } from "../controllers/productController.js"
 import { upload } from "../middlewares/multerMiddleware.js"
 
@@ -48,5 +48,14 @@ router.get('/related-product/:pid/:cid', relatedProductController)
 
 //category wise 
 router.get('/product-category/:slug', productCategoryController)
+
+
+//payment gateway route 
+//token get 
+router.get('/braintree/token', braintreeTokenController)
+
+//payments 
+router.post('/braintree/payment', requireSignIn, braintreePaymentController)
+
 
 export default router
