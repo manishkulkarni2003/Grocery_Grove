@@ -1,0 +1,114 @@
+/* Navbar base styles */
+.navbar {
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #f0f2f5 0%, #e2e6ea 100%);
+}
+
+/* Brand name styling */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+    color: #3498db;
+}
+
+/* Navigation links */
+.nav-link {
+    color: #34495e !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    margin: 0 0.2rem;
+}
+
+.nav-link:hover {
+    color: #3498db !important;
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.nav-link.active {
+    color: #3498db !important;
+    background-color: rgba(52, 152, 219, 0.15);
+}
+
+/* Dropdown styling */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 0.5rem;
+    background-color: #f8f9fa;
+}
+
+.dropdown-item {
+    color: #34495e;
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+}
+
+/* Cart badge customization */
+.ant-badge {
+    margin-left: 0.5rem;
+}
+
+.ant-badge-count {
+    background-color: #e74c3c;
+    box-shadow: 0 0 0 2px #f0f2f5;
+}
+
+/* Search input container */
+.search-input-container {
+    margin-right: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .navbar {
+        padding: 0.8rem 1rem;
+    }
+
+    .navbar-nav {
+        padding: 1rem 0;
+    }
+
+    .nav-link {
+        padding: 0.8rem 1rem !important;
+    }
+
+    .search-input-container {
+        margin: 0.5rem 0;
+    }
+}
+
+/* Navbar toggler customization */
+.navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+    border-radius: 6px;
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.navbar-toggler-icon {
+    width: 1.5em;
+    height: 1.5em;
+}
