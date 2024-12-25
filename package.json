@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "serve": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "nodemon index.js",
     "client": "npm run dev --prefix ./client",
-    "start": "concurrently \"npm run dev\" \"npm run client\""
+    "dev": "concurrently \"npm run start\" \"npm run client\""
   },
   "keywords": [],
   "author": "Manish Kulkarni",
