@@ -17,7 +17,7 @@ const Admindashboard = React.lazy(() => import('./pages/Admin/Admindashboard'));
 const Createcategory = React.lazy(() => import('./pages/Admin/Createcategory'));
 const Createproduct = React.lazy(() => import('./pages/Admin/Createproduct'));
 const Users = React.lazy(() => import('./pages/Admin/Users'));
-// const Orders = React.lazy(() => import('./pages/user/Orders'));
+const Orders = React.lazy(() => import('./pages/user/Orders'));
 const Profile = React.lazy(() => import('./pages/user/Profile'));
 const Products = React.lazy(() => import('./pages/Admin/Products'));
 const Updateproduct = React.lazy(() => import('./pages/Admin/Updateproduct'));
@@ -26,9 +26,8 @@ const Productdetails = React.lazy(() => import('./pages/Productdetails'));
 const Categories = React.lazy(() => import('./pages/Categories'));
 const Categoryproduct = React.lazy(() => import('./pages/Categoryproduct'));
 const Cartpage = React.lazy(() => import('./pages/Cartpage'));
-// const Adminorders = React.lazy(() => import('./pages/Admin/Adminorders'));
-import "./pages/Admin/Adminorders"
-import "./pages/user/Orders"
+const Adminorders = React.lazy(() => import('./pages/Admin/Adminorders'));
+
 
 function App() {
   return (
