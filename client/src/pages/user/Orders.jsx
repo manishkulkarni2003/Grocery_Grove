@@ -1,142 +1,144 @@
-import React, { useState, useEffect } from 'react';
-import Layout from '../../components/Layout/Layout';
-import Usermenu from '../../components/Layout/Usermenu';
-import axios from 'axios';
-import { useAuth } from '../../context/auth';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import AdminMenu from "../../components/Layout/Adminmenu.jsx";
+import Layout from "../../components/Layout/Layout";
+import { useAuth } from "../../context/auth";
 import moment from "moment";
+import { Select } from "antd";
+const { Option } = Select;
 
-const Orders = () => {
+const Adminorders = () => {
+  const [status, setStatus] = useState([
+    "Not Process",
+    "Processing",
+    "Shipped",
+    "Delivered",
+    "Cancelled",
+  ]);
   const [orders, setOrders] = useState([]);
-  const [auth, setAuth] = useAuth();
+  const [auth] = useAuth(); // Get auth state from context
+  const token = auth?.token; // Retrieve token from context
 
+  // Fetch orders with proper JWT token
   const getOrders = async () => {
     try {
-      const { data } = await axios.get('https://grocery-grove.onrender.com/api/v1/auth/orders');
+      const { data } = await axios.get(
+        "https://grocery-grove.onrender.com/api/v1/auth/all-orders",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send token in the header
+          },
+        }
+      );
       setOrders(data);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load orders");
     }
   };
 
   useEffect(() => {
-    if (auth?.token) getOrders();
-  }, [auth?.token]);
+    if (token) getOrders();
+  }, [token]); // Trigger getOrders when token changes
 
-  const getStatusBadge = (status) => {
-    switch (status?.toLowerCase()) {
-      case 'processing':
-        return 'bg-warning';
-      case 'shipped':
-        return 'bg-info';
-      case 'delivered':
-        return 'bg-success';
-      default:
-        return 'bg-secondary';
+  // Handle status change
+  const handleChange = async (orderId, value) => {
+    try {
+      const { data } = await axios.put(
+        `https://grocery-grove.onrender.com/api/v1/auth/order-status/${orderId}`,
+        { status: value },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send token in the header
+          },
+        }
+      );
+      getOrders(); // Refresh orders after update
+      toast.success("Order status updated");
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to update status");
     }
   };
 
   return (
-    <Layout title="Orders-Grocery Grove">
-      <div className="container-fluid py-4">
-        <div className="row">
-          <div className="col-md-3">
-            <Usermenu />
-          </div>
-          <div className="col-md-9">
-            <div className="card shadow-sm">
-              <div className="card-body">
-                <h2 className="card-title text-center mb-4">My Orders</h2>
-                {orders?.map((o, i) => (
-                  <div key={i} className="card mb-4 shadow-sm">
-                    <div className="card-header bg-white">
-                      <div className="d-flex justify-content-between align-items-center">
-                        <h5 className="mb-0">Order #{i + 1}</h5>
-                        <span className={`badge ${getStatusBadge(o?.status)}`}>
-                          {o?.status}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="card-body">
-                      <div className="row mb-3">
+    <Layout title={"All Orders Data"}>
+      <div className="row dashboard">
+        <div className="col-md-3">
+          <AdminMenu />
+        </div>
+        <div className="col-md-9">
+          <h1 className="text-center">All Orders</h1>
+          {orders.length === 0 ? (
+            <p>No orders found</p>
+          ) : (
+            orders.map((o, i) => (
+              <div key={o._id} className="border shadow mb-3">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Status</th>
+                      <th>Product</th>
+                      <th>Date</th>
+                      <th>Payment</th>
+                      <th>Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{i + 1}</td>
+                      <td>
+                        <Select
+                          bordered={false}
+                          onChange={(value) => handleChange(o._id, value)}
+                          defaultValue={o?.status}
+                        >
+                          {status.map((s, i) => (
+                            <Option key={i} value={s}>
+                              {s}
+                            </Option>
+                          ))}
+                        </Select>
+                      </td>
+                      <td>{o?.products?.map((p) => p.name).join(", ")}</td>
+                      <td>{moment(o?.createdAt).fromNow()}</td>
+                      <td>{o?.payment.success ? "Success" : "Failed"}</td>
+                      <td>{o?.products?.length}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div className="container">
+                  <div className="row">
+                    {o?.products?.map((p, index) => (
+                      <div key={index} className="row mb-2 p-3 card flex-row">
                         <div className="col-md-4">
-                          <small className="text-muted">Order Date:</small>
-                          <p className="mb-0">{moment(o?.createdAt).format('MMMM Do YYYY')}</p>
+                          <img
+                            className="card-img-top"
+                            src={p.image}
+                            alt={p.name}
+                            width="100px"
+                            height="100px"
+                          />
                         </div>
-                        <div className="col-md-4">
-                          <small className="text-muted">Payment Status:</small>
-                          <p className="mb-0">
-                            <span className={`badge ${o?.payment.success ? 'bg-success' : 'bg-danger'}`}>
-                              {o?.payment.success ? 'Success' : 'Failed'}
-                            </span>
-                          </p>
-                        </div>
-                        <div className="col-md-4">
-                          <small className="text-muted">Total Items:</small>
-                          <p className="mb-0">{o?.products?.length}</p>
-                        </div>
-                      </div>
-
-                      <div className="table-responsive mb-3">
-                        <table className="table table-bordered table-hover">
-                          <thead className="table-light">
-                            <tr>
-                              <th>Product</th>
-                              <th>Price</th>
-                              <th>Quantity</th>
-                              <th>Total</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {o?.products?.map((p, index) => (
-                              <tr key={index}>
-                                <td>
-                                  <div className="d-flex align-items-center">
-                                    <img
-                                      src={p.image}
-                                      alt={p.name}
-                                      className="me-3"
-                                      style={{
-                                        width: '60px',
-                                        height: '60px',
-                                        objectFit: 'cover',
-                                        borderRadius: '4px'
-                                      }}
-                                    />
-                                    <div>
-                                      <h6 className="mb-1">{p.name}</h6>
-                                      <small className="text-muted">
-                                        {p.description.substring(0, 50)}...
-                                      </small>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td>₹{p.price}</td>
-                                <td>{p.quantity}</td>
-                                <td>₹{p.price * p.quantity}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-
-                      <div className="d-flex justify-content-end">
-                        <div className="text-end">
-                          <small className="text-muted">Order Total:</small>
-                          <h5 className="mb-0">
-                            ₹{o?.products?.reduce((acc, p) => acc + (p.price * p.quantity), 0)}
-                          </h5>
+                        <div className="col-md-8">
+                          <h6>Name: {p.name}</h6>
+                          <p>Description: {p.description.substring(0, 30)}</p>
+                          <p>Price: ₹{p.price}</p>
+                          <p>Quantity: {p.quantity}</p>
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
-          </div>
+            ))
+          )}
         </div>
       </div>
     </Layout>
   );
 };
 
-export default Orders;
+export default Adminorders;
