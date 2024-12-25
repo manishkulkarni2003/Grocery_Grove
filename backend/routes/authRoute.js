@@ -33,7 +33,7 @@ router.put('/profile', requireSignIn, updateProfileController)
 
 
 //orders
-router.get('/orders', requireSignIn, getOrdersController)
+router.get('/orders', getOrdersController)
 
 //admin orders
 router.get('/all-orders', requireSignIn, isAdmin, getAllOrdersController)
