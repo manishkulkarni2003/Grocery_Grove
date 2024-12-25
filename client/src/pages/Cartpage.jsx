@@ -60,7 +60,7 @@ const Cartpage = () => {
     const getToken=async()=>{
         try{    
 
-        const {data}=await axios.get('http://localhost:8080/api/v1/product/braintree/token');
+        const {data}=await axios.get('https://grocery-grove.onrender.com/api/v1/product/braintree/token');
 
         setClientToken(data?.clientToken)    
 
@@ -81,7 +81,7 @@ const Cartpage = () => {
             setLoading(true)
             const {nonce}=await instance.requestPaymentMethod();
 
-            const {data}=await axios.post('http://localhost:8080/api/v1/product/braintree/payment',{
+            const {data}=await axios.post('https://grocery-grove.onrender.com/api/v1/product/braintree/payment',{
                 nonce,cart
             })
 

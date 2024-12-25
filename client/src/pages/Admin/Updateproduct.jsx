@@ -32,7 +32,7 @@ const Updateproduct = () => {
 //get single product
 const getSingleProduct=async()=>{
     try{
-        const {data} =await axios.get(`http://localhost:8080/api/v1/product/get-product/${params.slug}`)
+        const {data} =await axios.get(`https://grocery-grove.onrender.com/api/v1/product/get-product/${params.slug}`)
 
         setName(data.product.name);
         setId(data.product._id)
@@ -57,7 +57,7 @@ useEffect(()=>{
   //get all category
   const getAllCategory = async () => {
     try {
-      const { data } = await axios.get("http://localhost:8080/api/v1/category/get-category");
+      const { data } = await axios.get("https://grocery-grove.onrender.com/api/v1/category/get-category");
       if (data?.success) {
         setCategories(data.category);
       }
@@ -85,7 +85,7 @@ useEffect(()=>{
       productData.append('category',category)
 
 
-      const{data}=axios.put(`http://localhost:8080/api/v1/product/update-product/${id}`,productData)
+      const{data}=axios.put(`https://grocery-grove.onrender.com/api/v1/product/update-product/${id}`,productData)
       if(data?.success){
         toast.error(data?.message)
 
@@ -109,7 +109,7 @@ useEffect(()=>{
         let answer =window.prompt("Are You Sure You Want to Delete This Product? ")
         if(!answer)return 
 
-        const {data} =await axios.delete(`http://localhost:8080/api/v1/product/delete-product/${id}`)
+        const {data} =await axios.delete(`https://grocery-grove.onrender.com/api/v1/product/delete-product/${id}`)
 
         toast.success("Product Deleted Successfully")
         navigate('/dashboard/admin/products')

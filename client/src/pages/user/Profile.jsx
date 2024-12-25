@@ -30,7 +30,7 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.put("http://localhost:8080/api/v1/auth/profile", {
+      const { data } = await axios.put("https://grocery-grove.onrender.com/api/v1/auth/profile", {
         name,
         email,
         password,

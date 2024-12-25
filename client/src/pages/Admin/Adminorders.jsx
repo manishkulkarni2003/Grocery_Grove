@@ -23,7 +23,7 @@ const Adminorders = () => {
   const [auth, setAuth] = useAuth();
   const getOrders = async () => {
     try {
-      const { data } = await axios.get("http://localhost:8080/api/v1/auth/all-orders");
+      const { data } = await axios.get("https://grocery-grove.onrender.com/api/v1/auth/all-orders");
       setOrders(data);
     } catch (error) {
       console.log(error);
@@ -36,7 +36,7 @@ const Adminorders = () => {
 
   const handleChange=async(orderId,value)=>{
     try{
-        const {data}=await axios.put(`http://localhost:8080/api/v1/auth/order-status/${orderId}`,{status:value})
+        const {data}=await axios.put(`https://grocery-grove.onrender.com/api/v1/auth/order-status/${orderId}`,{status:value})
         getOrders();
 
     }catch(err){

@@ -17,7 +17,7 @@ const Products = () => {
     //get all products
     const getAllProducts=async()=>{
         try{
-            const {data}=await axios.get("http://localhost:8080/api/v1/product/get-product")
+            const {data}=await axios.get("https://grocery-grove.onrender.com/api/v1/product/get-product")
             setProducts(data.products);
 
 

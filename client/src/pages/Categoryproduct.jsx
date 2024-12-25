@@ -20,7 +20,7 @@ const CategoryProduct = () => {
     const getProductByCategory = async () => {
         try {
             const { data } = await axios.get(
-                `http://localhost:8080/api/v1/product/product-category/${params.slug}`
+                `https://grocery-grove.onrender.com/api/v1/product/product-category/${params.slug}`
             );
             setProducts(data?.products);
             setCategories(data?.category);

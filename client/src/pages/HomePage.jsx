@@ -36,7 +36,7 @@ const HomePage = () => {
   //get total count
   const getTotal=async()=>{
     try{
-      const {data}=await axios.get("http://localhost:8080/api/v1/product/product-count")
+      const {data}=await axios.get("https://grocery-grove.onrender.com/api/v1/product/product-count")
       setTotal(data?.total)
 
     }catch(err){
@@ -59,7 +59,7 @@ const HomePage = () => {
   const loadMore=async()=>{
     try{
       setLoading(true)
-      const {data}=await axios.get(`http://localhost:8080/api/v1/product/product-list/${page}`)
+      const {data}=await axios.get(`https://grocery-grove.onrender.com/api/v1/product/product-list/${page}`)
       setProducts([...products,...data?.products]);
       setLoading(false)
     }catch(err){
@@ -72,7 +72,7 @@ const HomePage = () => {
 
   const getAllCategory = async () => {
     try {
-      const { data } = await axios.get("http://localhost:8080/api/v1/category/get-category");
+      const { data } = await axios.get("https://grocery-grove.onrender.com/api/v1/category/get-category");
       if (data?.success) {
         setCategories(data.category);
       }
@@ -93,7 +93,7 @@ const HomePage = () => {
   const getAllProducts=async()=>{
     try{
       setLoading(true);
-      const {data}=await axios.get(`http://localhost:8080/api/v1/product/product-list/${page}`);
+      const {data}=await axios.get(`https://grocery-grove.onrender.com/api/v1/product/product-list/${page}`);
 
       setProducts(data.products)
       setLoading(false)
@@ -136,7 +136,7 @@ const HomePage = () => {
 
   const filterProduct =async()=>{
     try{
-      const {data}=await axios.post('http://localhost:8080/api/v1/product/product-filter',{checked,radio})
+      const {data}=await axios.post('https://grocery-grove.onrender.com/api/v1/product/product-filter',{checked,radio})
       setProducts(data?.products)
     }catch(err){
       console.log(err)

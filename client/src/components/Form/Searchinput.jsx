@@ -11,7 +11,7 @@ const Searchinput = () => {
     const handleSearch =async(e)=>{
         try{
             e.preventDefault();
-            const {data} =await axios.get(`http://localhost:8080/api/v1/product/search/${values.keyword}`);
+            const {data} =await axios.get(`https://grocery-grove.onrender.com/api/v1/product/search/${values.keyword}`);
             setValues({...values,results:data});
             navigate('/search')
 

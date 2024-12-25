@@ -11,7 +11,7 @@ const Orders = () => {
 
   const getOrders = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8080/api/v1/auth/orders');
+      const { data } = await axios.get('https://grocery-grove.onrender.com/api/v1/auth/orders');
       setOrders(data);
     } catch (err) {
       console.log(err);

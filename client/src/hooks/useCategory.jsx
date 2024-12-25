@@ -9,7 +9,7 @@ export default function useCategory(){
 
 const getCategories =async()=>{
     try{
-        const {data} =await axios.get('http://localhost:8080/api/v1/category/get-category')
+        const {data} =await axios.get('https://grocery-grove.onrender.com/api/v1/category/get-category')
 
         setCategories(data?.category)
     }catch(err){
