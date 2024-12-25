@@ -24,23 +24,30 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../../client/dist')));
+
+// Fixing the path to the dist folder
+const clientDistPath = path.join(__dirname, '../client/dist'); // Adjusted relative path
+
+// Debugging log for path
+console.log("Client Dist Path: ", clientDistPath);
+
+// Serve static files (Frontend build)
+app.use(express.static(clientDistPath));
 
 // Routes
 app.use('/api/v1/auth', authroutes);
 app.use('/api/v1/category', categoryRoute);
 app.use('/api/v1/product', productRoute);
 
-// Fallback route
+// Fallback route (for Single Page App)
 app.use('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+    res.sendFile(path.join(clientDistPath, 'index.html')); // Ensure the correct path to index.html
 });
 
 // Port configuration
 const PORT = process.env.PORT || 8080;
 
-
-
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
