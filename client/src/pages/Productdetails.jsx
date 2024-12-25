@@ -2,6 +2,8 @@ import React,{useState,useEffect} from 'react'
 import Layout from '../components/Layout/Layout'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
+import "../styles/ProductdetailsStyles.css"
+import { useCart } from '../context/cart'
 
 
 const Productdetails = () => {
@@ -11,7 +13,8 @@ const Productdetails = () => {
 
     const [product,setProduct]=useState({})
 
-    const [relatedProduct,setRelatedProduct] =useState([])
+    const [relatedProduct,setRelatedProduct] =useState([]);
+    const [cart,setcart]=useCart()
 
 
     useEffect(()=>{
@@ -47,52 +50,52 @@ const Productdetails = () => {
 
   return (
     <Layout>
-      <div className="row container mt-2">
+  <div className="product-details-container">
+    <div className="product-main">
+      <div className="row">
         <div className="col-md-6">
-            <img src={product.image} className='card-img-top' alt={product.name} height={'300px'} width={'350px'} />
-        </div>
-        <div className="col-md-6 text-center">
-        <h1>Product Details</h1>
-        <h3>Product Name:{product.name}</h3>
-        <h4>Product Description:{product.description}</h4>
-        <h4>Product Price:₹{product.price}</h4>
-        <h5>Product Unit:{product.quantity}</h5>
-        <h5>Product Category:{product?.category?.name}</h5>
-        <button className='btn btn-secondary ms-1'>ADD TO CART</button>
-        
-        </div>
-      </div>
-      <hr />
-      <div className="row container text-center ">
-        <h6>
-            Similar Products
-        </h6>
-        {relatedProduct.length<1 && (<p>No Similar Product Found</p>)}
-
-        <div className="d-flex flex-wrap
-          ">
-            {relatedProduct?.map(p=>(
-    
-
-    
-    <div className="card m-2" style={{width: '18rem'}} >
-  <img className="card-img-top" src={p.image} alt={p.name} />
-  <div className="card-body">
-    <h5 className="card-title">{p.name}</h5>
-    <p className="card-text">{p.description.substring(0,45)}...</p>
-    <p className="card-text">₹{p.price}</p>
-    
-    <button className="btn btn-secondary ms-1">Add to Cart</button>
-    
-  </div>
-</div>
-
-
-))}
+          <div className="product-image-container">
+            <img src={product.image} className="product-image" alt={product.name} />
           </div>
+        </div>
+        <div className="col-md-6">
+          <div className="product-info">
+            <h1 className="product-title">{product.name}</h1>
+            <p className="product-description">{product.description}</p>
+            <h4 className="product-price">₹{product.price}</h4>
+            <div className="product-meta">
+              <h5>Quantity: {product.quantity}</h5>
+              <h5>Category: {product?.category?.name}</h5>
+            </div>
+            <button className="add-to-cart-btn">ADD TO CART</button>
+          </div>
+        </div>
       </div>
-      
-    </Layout>
+    </div>
+
+    <div className="similar-products">
+      <h6 className="similar-products-title">Similar Products</h6>
+      {relatedProduct.length < 1 && (
+        <p className="no-products">No Similar Products Found</p>
+      )}
+      <div className="similar-products-grid">
+        {relatedProduct?.map(p => (
+          <div className="product-card" key={p._id}>
+            <img className="product-card-image" src={p.image} alt={p.name} />
+            <div className="product-card-body">
+              <h5 className="product-card-title">{p.name}</h5>
+              <p className="product-card-description">
+                {p.description.substring(0, 45)}...
+              </p>
+              <p className="product-card-price">₹{p.price}</p>
+              <button className="add-to-cart-btn">Add to Cart</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</Layout>
   )
 }
 

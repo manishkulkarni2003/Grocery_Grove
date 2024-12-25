@@ -8,7 +8,7 @@ import DropIn from "braintree-web-drop-in-react";
 
 import axios from 'axios'
 import toast from 'react-hot-toast'
-
+import "../styles/CartpageStyles.css"
 
 
 const Cartpage = () => {
@@ -101,122 +101,118 @@ const Cartpage = () => {
 
 
 
-  return (
-    <Layout>
-      <div className="container">
-        <div className="row">
-           <div className="col-md-12">
-            <h1 className='text-center bg-light p-2 mb-4'>
-              {`Hello${auth?.token && auth?.user?.name}`}  
-            </h1>
-            <h4 className='text-center'>
-            {
-                cart?.length ?`You have ${cart?.length}Items ${auth?.token ?"":"Please Login to CheckOut"}`:(
-                    "Your Cart is Empty"
-                )
-            }
-            </h4>
-           </div>
-        </div>
-        <div className="row">
-            <div className="col-md-6">
-                <div className="row">
-                    {
-                        cart?.map(p=>(
-                         <div className="row mb-2 p-3 card flex-row">
-                            <div className="col-md-4">
-                            <img className="card-img-top" src={p.image} alt={p.name} width="100px" height={"100px"} />
+    return (
+        <Layout>
+            <div className="cart-container">
+                <div className="container">
+                    <div className="cart-header">
+                        <h1 className="cart-welcome">
+                            {`Hello ${auth?.token && auth?.user?.name}`}
+                        </h1>
+                        <h4 className="cart-status">
+                            {cart?.length 
+                                ? `You have ${cart?.length} items ${auth?.token ? "" : "- Please login to checkout"}`
+                                : "Your Cart is Empty"
+                            }
+                        </h4>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-md-7">
+                            <div className="cart-items-container">
+                                {cart?.map(p => (
+                                    <div className="cart-item" key={p._id}>
+                                        <img 
+                                            className="cart-item-image" 
+                                            src={p.image} 
+                                            alt={p.name}
+                                        />
+                                        <div className="cart-item-details">
+                                            <h6 className="cart-item-name">{p.name}</h6>
+                                            <p className="cart-item-description">
+                                                {p.description.substring(0, 30)}...
+                                            </p>
+                                            <p className="cart-item-price">₹{p.price}</p>
+                                            <p className="cart-item-quantity">
+                                                Quantity: {p.quantity}
+                                            </p>
+                                            <button 
+                                                className="remove-btn"
+                                                onClick={() => removeCartItem(p._id)}
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                            <div className="col-md-8">
-                                <h6>Name:{p.name}</h6>
-                                <p>Description:{p.description.substring(0,30)}</p>
-                                <p>Price:₹{p.price}</p>
-                                <p>Quantity:₹{p.quantity}</p>
-                                <button className='btn btn-danger'
-                                onClick={()=>removeCartItem(p._id)}
-                                >Remove</button>
+                        </div>
+
+                        <div className="col-md-5">
+                            <div className="cart-summary">
+                                <h4 className="summary-header">Cart Summary</h4>
+                                <h6 className="summary-total">Total: {totalPrice()}</h6>
+
+                                {auth?.user?.address ? (
+                                    <div className="address-section">
+                                        <h4 className="address-title">Delivery Address</h4>
+                                        <p className="address-text">{auth?.user?.address}</p>
+                                        <button 
+                                            className="update-address-btn"
+                                            onClick={() => navigate('/dashboard/user/profile')}
+                                        >
+                                            Update Address
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="address-section">
+                                        {auth?.token ? (
+                                            <button 
+                                                className="update-address-btn"
+                                                onClick={() => navigate('/dashboard/user/profile')}
+                                            >
+                                                Update Address
+                                            </button>
+                                        ) : (
+                                            <button
+                                                className="login-btn"
+                                                onClick={() => navigate('/login', {
+                                                    state: "/cart"
+                                                })}
+                                            >
+                                                Please Login to Checkout
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+
+                                {!clientToken || !cart?.length ? null : (
+                                    <div className="payment-container">
+                                        <DropIn
+                                            options={{ 
+                                                authorization: clientToken,
+                                                paypal: {
+                                                    flow: 'vault'
+                                                }
+                                            }}
+                                            onInstance={instance => setInstance(instance)}
+                                        />
+                                        <button 
+                                            className="payment-btn"
+                                            onClick={handlePayment}
+                                            disabled={loading || !instance || !auth?.user?.address}
+                                        >
+                                            {loading ? "Processing..." : "Make Payment"}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
-                         </div>   
-                        ))
-                    }
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="col-md-6 text-center">
-          <h4>
-            Cart Summary
-            <hr />
-            <p>Total|checkOut|Payment</p>
-            </h4>   
-            <hr />
-            <h6>Total:{totalPrice()}</h6>
-            {auth?.user?.address?(
-                <>
-               <div className="mb-3">
-                <h4>Current Address</h4>
-                <p>{auth?.user?.address}</p>
-                <button className='btn btn-outline-warning'
-                onClick={()=>navigate('/dashboard/user/profile')}
-                >
-                    Update Address
-                </button>
-
-               </div> 
-               </>
-            ):(
-                <>
-            <div className="mb-3">
-                {
-                    auth?.token ?(
-                    <button className='btn btn-outline-warning'
-                    onClick={()=>navigate('/dashboard/user/profile')}
-                    >
-                     Update Address   
-                    </button>    
-                    ):(
-                    <button
-                    className='btn btn-outline-warning'
-                    onClick={()=>navigate('/login',{
-                        state:"/cart"
-                    })}>
-                        Please Login to Checkout
-                    </button>
-
-                    )
-                }
-            </div>
-                </>
-            )}
-            <div className="mt-2">
-            {
-                !clientToken||!cart?.length?(""):(
-                    <>
-
-                    
-            <DropIn
-            options={{ authorization:clientToken,
-              paypal:{
-                flow:'vault'
-              }  
-             }}
-             onInstance={instance=>setInstance(instance)}
-            
-          />
-          <button className='btn btn-primary'
-          onClick={handlePayment} disabled={loading||!instance||!auth?.user?.address }
-          >
-            {loading?"Processing":"Make Payment"}
-          </button>
-          </>
-                )
-            }
-            </div>
-
-            </div>
-
-        </div>
-      </div>
-    </Layout>
-  )
+        </Layout>
+    );
 }
 
 export default Cartpage

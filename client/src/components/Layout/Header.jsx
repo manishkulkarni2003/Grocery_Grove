@@ -7,6 +7,7 @@ import Searchinput from '../Form/Searchinput';
 import useCategory from '../../hooks/useCategory';
 import { useCart } from '../../context/cart';
 import { Badge } from "antd";
+import "../../styles/NavbarStyles.css"
 
 
 
