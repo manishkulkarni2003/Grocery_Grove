@@ -24,7 +24,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, './client/dist')));
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Routes
 app.use('/api/v1/auth', authroutes);
@@ -33,7 +33,7 @@ app.use('/api/v1/product', productRoute);
 
 // Fallback route
 app.use('*', function (req, res) {
-    res.sendFile(path.join(__dirname, './client/dist/index.html'));
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 // Port configuration
