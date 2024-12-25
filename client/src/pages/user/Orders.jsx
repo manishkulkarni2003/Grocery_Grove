@@ -24,7 +24,7 @@ const Adminorders = () => {
   const getOrders = async () => {
     try {
       const { data } = await axios.get(
-        "https://grocery-grove.onrender.com/api/v1/auth/all-orders",
+        "https://grocery-grove.onrender.com/api/v1/auth/orders",
         {
           headers: {
             Authorization: `Bearer ${token}`, // Send token in the header
