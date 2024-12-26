@@ -85,7 +85,7 @@ useEffect(()=>{
       productData.append('category',category)
 
 
-      const{data}=axios.put(`https://grocery-grove.onrender.com/api/v1/product/update-product/${id}`,productData)
+      const{data}=await axios.put(`https://grocery-grove.onrender.com/api/v1/product/update-product/${id}`,productData)
       if(data?.success){
         toast.error(data?.message)
 
