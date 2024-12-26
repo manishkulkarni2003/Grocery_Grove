@@ -24,32 +24,32 @@ var gateway = new braintree.BraintreeGateway({
 
 const createProductController = async (req, res) => {
     try {
-        const { name, slug, description, price, category, quantity, shipping } = req.body;
+        const { name, description, price, category, quantity, shipping } = req.body;
 
         // Validate required fields
         if (!name || !description || !price || !category || !quantity) {
-            return res.status(400).json({ message: "All fields are required." });
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required."
+            });
         }
-
-        // Validate category (if necessary)
-        // const categoryDoc = await categoryModel.findOne({ name: category });
-        // if (!categoryDoc) {
-        //     return res.status(400).json({ message: "Invalid category" });
-        // }
 
         // Validate and upload image
-        const imageLocalPath = req.file?.path;
-        if (!imageLocalPath) {
-            return res.status(400).json({ message: "No Image File Provided" });
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "No Image File Provided"
+            });
         }
 
-        const itemImage = await uploadOnCloudinary(imageLocalPath);
+        // Upload buffer to Cloudinary
+        const itemImage = await uploadOnCloudinary(req.file.buffer);
         if (!itemImage || !itemImage.secure_url) {
-            return res.status(400).json({ message: "Failed to Upload Image to Cloudinary" });
+            return res.status(400).json({
+                success: false,
+                message: "Failed to Upload Image to Cloudinary"
+            });
         }
-
-        // Extract only the secure URL for the image
-        const imageUrl = itemImage.secure_url;
 
         // Create product
         const product = await productModel.create({
@@ -57,10 +57,10 @@ const createProductController = async (req, res) => {
             slug: slugify(name),
             description,
             price,
-            category, // Use ObjectId for category if applicable
+            category,
             quantity,
             shipping,
-            image: imageUrl, // Save only the secure URL
+            image: itemImage.secure_url
         });
 
         res.status(201).json({
@@ -68,9 +68,14 @@ const createProductController = async (req, res) => {
             message: "Product Created Successfully",
             product,
         });
-    } catch (err) {
-        console.error("Error while creating product:", err.message);
-        res.status(500).json({ success: false, message: "Error While creating product", err });
+
+    } catch (error) {
+        console.error("Error in createProductController:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error while creating product",
+            error: error.message
+        });
     }
 };
 
