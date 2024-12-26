@@ -182,22 +182,38 @@ const updateProfileController = async (req, res) => {
 
 const getOrdersController = async (req, res) => {
     try {
+        // Debug logs
+        console.log('User ID from request:', req.user._id);
 
-        const orders = await orderModel.find({ buyer: req.user._id }).populate('products').populate("buyer", "name");
+        // Verify user exists in request
+        if (!req.user?._id) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authenticated"
+            });
+        }
+
+        // Find orders with proper population
+        const orders = await orderModel
+            .find({ buyer: req.user._id })
+            .populate('products')
+            .populate("buyer", "name")
+            .sort({ createdAt: -1 }); // Sort by newest first
+
+        console.log('Found orders:', orders.length); // Debug log
+
+        // Send response
         res.json(orders);
 
-
-
-
-
     } catch (err) {
-        console.log(err);
-        res.status(400).json({
-            success: false, err,
-            message: "Erro While Fetching the Orders"
-        })
+        console.error('Error in getOrdersController:', err);
+        res.status(500).json({
+            success: false,
+            error: err.message,
+            message: "Error While Fetching the Orders"
+        });
     }
-}
+};
 
 //all orders
 const getAllOrdersController = async (req, res) => {
