@@ -33,10 +33,10 @@ router.put('/profile', requireSignIn, updateProfileController)
 
 
 //orders
-router.get('/orders', requireSignIn, isAdmin, getOrdersController)
+router.get('/orders', requireSignIn, getOrdersController)
 
 //admin orders
-router.get('/all-orders', requireSignIn, getAllOrdersController)
+router.get('/all-orders', requireSignIn, isAdmin, getAllOrdersController)
 
 
 //order status
