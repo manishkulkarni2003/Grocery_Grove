@@ -133,42 +133,41 @@ const deleteProductController = async (req, res) => {
 //update
 const updateProductController = async (req, res) => {
     try {
-        // console.log("Request Body:", req.body); // Debugging the request body
-        // console.log("Request Params:", req.params); // Debugging the request params
-        // console.log("Request File:", req.file); // Debugging the uploaded file
-
-        const { name, slug, description, price, category, quantity, shipping } = req.body;
+        const { name, description, price, category, quantity, shipping } = req.body;
 
         // Validate fields
         if (!name || !description || !price || !category || !quantity) {
-            console.error("Validation Failed: Missing fields");
-            return res.status(400).json({ message: "All fields are required" });
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required"
+            });
         }
 
         // Find the existing product
         const existingProduct = await productModel.findById(req.params.pid);
-        console.log("Existing Product:", existingProduct); // Debugging existing product
 
         if (!existingProduct) {
-            console.error("Product Not Found");
-            return res.status(404).json({ message: "Product not found" });
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
         }
 
-        // Handle file upload
+        // Handle image upload
         let imageUrl = existingProduct.image; // Default to existing image
-        if (req.file?.path) {
-            console.log("Uploading Image...");
-            const itemImage = await uploadOnCloudinary(req.file.path);
-            console.log("Uploaded Image Response:", itemImage); // Debugging upload response
+
+        if (req.file) {
+            const itemImage = await uploadOnCloudinary(req.file.buffer);
             if (!itemImage || !itemImage.secure_url) {
-                console.error("Image Upload Failed");
-                return res.status(400).json({ message: "Failed to Upload Image to Cloudinary" });
+                return res.status(400).json({
+                    success: false,
+                    message: "Failed to Upload Image to Cloudinary"
+                });
             }
-            imageUrl = itemImage.secure_url; // Update to new image URL
+            imageUrl = itemImage.secure_url;
         }
 
         // Update the product
-        console.log("Updating Product...");
         const updatedProduct = await productModel.findByIdAndUpdate(
             req.params.pid,
             {
@@ -184,16 +183,18 @@ const updateProductController = async (req, res) => {
             { new: true }
         );
 
-        console.log("Updated Product:", updatedProduct); // Debugging updated product
-
         res.status(200).json({
             success: true,
             message: "Product Updated Successfully",
             product: updatedProduct,
         });
-    } catch (err) {
-        console.error("Error while updating product:", err.message, err.stack);
-        res.status(500).json({ success: false, message: "Error While Updating product", err });
+    } catch (error) {
+        console.error("Error in updateProductController:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error while updating product",
+            error: error.message
+        });
     }
 };
 

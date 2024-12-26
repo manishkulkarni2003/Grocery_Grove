@@ -22,7 +22,7 @@ const app = express();
 // Middleware
 app.use(cors({
     origin: 'https://grocery-grove-uq92.vercel.app',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.json());
