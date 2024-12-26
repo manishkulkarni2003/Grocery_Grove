@@ -53,7 +53,7 @@ const Createproduct = () => {
       productData.append('category',category)
 
 
-      const{data}=axios.post('https://grocery-grove.onrender.com/api/v1/product/create-product',productData)
+      const{data}=await axios.post('https://grocery-grove.onrender.com/api/v1/product/create-product',productData)
       if(data?.success){
         toast.error(data?.message)
 
