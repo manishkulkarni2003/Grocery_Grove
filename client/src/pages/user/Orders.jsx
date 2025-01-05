@@ -16,15 +16,15 @@ const Orders = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log('Fetching orders with token:', auth?.token); // Debug log
-      
+      console.log('Fetching orders with token:', auth?.token);
+
       const { data } = await axios.get('https://grocery-grove.onrender.com/api/v1/auth/orders', {
         headers: {
           Authorization: `Bearer ${auth?.token}`
         }
       });
-      
-      console.log('Orders received:', data); // Debug log
+
+      console.log('Orders received:', data);
       setOrders(data);
     } catch (err) {
       console.error('Error fetching orders:', err);
@@ -88,10 +88,58 @@ const Orders = () => {
                 {orders?.length === 0 ? (
                   <div className="text-center">No orders found</div>
                 ) : (
-                  orders.map((o, i) => (
-                    // Rest of your existing orders mapping code remains the same
-                    <div key={o._id} className="card mb-4 shadow-sm">
-                      {/* ... existing order card content ... */}
+                  orders.map((order) => (
+                    <div key={order._id} className="card mb-4 shadow-sm">
+                      <div className="card-header bg-light">
+                        <div className="row align-items-center">
+                          <div className="col">
+                            <strong>Order ID: </strong>{order._id}
+                          </div>
+                          <div className="col text-end">
+                            <span className={`badge ${getStatusBadge(order.status)}`}>
+                              {order.status}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="card-body">
+                        <div className="row mb-3">
+                          <div className="col-md-6">
+                            <strong>Order Date: </strong>
+                            {moment(order.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
+                          </div>
+                          <div className="col-md-6 text-md-end">
+                            <strong>Total Amount: </strong>
+                            ${order.payment.amount}
+                          </div>
+                        </div>
+                        <div className="table-responsive">
+                          <table className="table table-sm table-bordered">
+                            <thead>
+                              <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {order.products.map((item) => (
+                                <tr key={item._id}>
+                                  <td>{item.name}</td>
+                                  <td>${item.price}</td>
+                                  <td>{item.quantity}</td>
+                                  <td>${item.price * item.quantity}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="mt-3">
+                          <strong>Shipping Address: </strong>
+                          {order.shippingAddress}
+                        </div>
+                      </div>
                     </div>
                   ))
                 )}
