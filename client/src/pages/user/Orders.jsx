@@ -110,7 +110,7 @@ const Orders = () => {
                           </div>
                           <div className="col-md-6 text-md-end">
                             <strong>Total Amount: </strong>
-                            ${order.payment.amount}
+                            ₹{order.payment.amount}
                           </div>
                         </div>
                         <div className="table-responsive">
@@ -127,9 +127,9 @@ const Orders = () => {
                               {order.products.map((item) => (
                                 <tr key={item._id}>
                                   <td>{item.name}</td>
-                                  <td>${item.price}</td>
+                                  <td>₹{item.price}</td>
                                   <td>{item.quantity}</td>
-                                  <td>${item.price * item.quantity}</td>
+                                  <td>₹{item.price * item.quantity}</td>
                                 </tr>
                               ))}
                             </tbody>
